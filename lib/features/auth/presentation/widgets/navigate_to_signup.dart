@@ -4,8 +4,8 @@ import 'package:healthy_fit/core/routes/functions/navigation_functions.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../core/utils/app_colors.dart';
 
-class NavigateToSignUp extends StatelessWidget {
-  const NavigateToSignUp({
+class NavigateToRegister extends StatelessWidget {
+  const NavigateToRegister({
     super.key,
   });
 
@@ -17,10 +17,10 @@ class NavigateToSignUp extends StatelessWidget {
         const Text('Don’t have an account?'),
         TextButton(
           onPressed: () {
-            customReplacementNavigate(context, signup);
+            customReplacementNavigate(context, genderView);
           },
           child: Text(
-            'Sign Up',
+            'Register Now',
             style: TextStyle(color: AppColors.primaryColor),
           ),
         ),
