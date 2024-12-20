@@ -20,8 +20,8 @@ abstract class CustomTextStyles {
   );
   static TextStyle poppins400Style12Grey = TextStyle(
     fontSize: 12.sp,
-        color: AppColors.grey,
-fontWeight: FontWeight.w400,
+    color: AppColors.grey,
+    fontWeight: FontWeight.w400,
     fontFamily: "Poppins",
   );
   static TextStyle poppins400Style14 = TextStyle(
@@ -32,6 +32,11 @@ fontWeight: FontWeight.w400,
   static TextStyle poppins400Style18 = TextStyle(
     fontSize: 18.sp,
     fontWeight: FontWeight.w400,
+    fontFamily: "Poppins",
+  );
+  static TextStyle poppins500Style18 = TextStyle(
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w500,
     fontFamily: "Poppins",
   );
   static TextStyle poppins400Style16Grey = TextStyle(

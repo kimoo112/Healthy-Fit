@@ -48,10 +48,12 @@ class CustomTextFormField extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         prefixIcon: isHavePrefix ? Icon(icon, color: AppColors.dark) : null,
-        hintStyle: TextStyle(color: AppColors.grey,fontSize: 12),
+        hintStyle: TextStyle(color: AppColors.grey, fontSize: 12),
         hintText: hintText,
         label: labelText != null ? Text(labelText!) : null,
-        labelStyle: TextStyle(color: AppColors.grey,),
+        labelStyle: TextStyle(
+          color: AppColors.grey,
+        ),
         suffixIcon: suffixIcon,
         hoverColor: AppColors.primaryColor,
         border: OutlineInputBorder(

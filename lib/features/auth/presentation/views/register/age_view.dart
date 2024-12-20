@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:healthy_fit/core/routes/functions/navigation_functions.dart';
 import 'package:healthy_fit/core/utils/app_colors.dart';
+import 'package:healthy_fit/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
 
@@ -18,8 +20,8 @@ class AgeView extends StatefulWidget {
 }
 
 class _AgeViewState extends State<AgeView> {
-  DateTime? _selectedDate; // Selected birth date
-  int _calculatedAge = 0; // Calculated age
+  DateTime? _selectedDate; 
+  int _calculatedAge = 0;
 
   void _pickDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -30,12 +32,11 @@ class _AgeViewState extends State<AgeView> {
             // Primary color for header, buttons, etc.
             primaryColor: AppColors.primaryColor,
             colorScheme: ColorScheme.light(
-              primary:
-                  AppColors.primaryColor, // Header background and button color
-              onPrimary: Colors.white, // Header text color
-              onSurface: Colors.black, // Default text color
+              primary: AppColors.primaryColor,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
             ),
-            dialogBackgroundColor: Colors.grey[200], // Background color
+            dialogBackgroundColor: Colors.grey[200],
           ),
           child: child!,
         );
@@ -60,7 +61,7 @@ class _AgeViewState extends State<AgeView> {
 
     if (now.month < birthDate.month ||
         (now.month == birthDate.month && now.day < birthDate.day)) {
-      age--; // Adjust if the current date is before the birthday in the year
+      age--;
     }
 
     return age;
@@ -140,18 +141,24 @@ class _AgeViewState extends State<AgeView> {
                   ),
                 ),
                 const Spacer(),
-                CustomButton(
-                  onPressed: _calculatedAge == 0
-                      ? () {}
-                      : () {
-                          customNavigate(context, weightView);
-                        },
-                  text: 'Next',
-                  borderRadius: 12,
-                  color: _calculatedAge == 0
-                      ? AppColors.primaryColor.withOpacity(.6)
-                      : AppColors.primaryColor,
-                  textColor: AppColors.white,
+                BlocBuilder<AuthCubit, AuthState>(
+                  builder: (context, state) {
+                    return CustomButton(
+                      onPressed: _calculatedAge == 0
+                          ? () {}
+                          : () {
+                              context.read<AuthCubit>().age = _calculatedAge;
+                              debugPrint(context.read<AuthCubit>().age.toString());
+                              customNavigate(context, weightView);
+                            },
+                      text: 'Next',
+                      borderRadius: 12,
+                      color: _calculatedAge == 0
+                          ? AppColors.primaryColor.withOpacity(.6)
+                          : AppColors.primaryColor,
+                      textColor: AppColors.white,
+                    );
+                  },
                 )
               ],
             ),

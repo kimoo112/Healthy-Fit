@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:healthy_fit/core/widgets/green_slogan.dart';
 import 'package:healthy_fit/core/widgets/top_right_vectors.dart';
 
-import '../widgets/custom_signup_form.dart';
-import '../widgets/navigate_to_login.dart';
+import '../../widgets/custom_signup_form.dart';
+import '../../widgets/navigate_to_login.dart';
 
 class SignupView extends StatelessWidget {
   const SignupView({super.key});

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../utils/app_assets.dart';
@@ -10,6 +9,7 @@ class TopRightVectors extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(right: 0, top: 0, child: Image.asset(Assets.imagesVectors));
+    return Positioned(
+        right: 0, top: 0, child: Image.asset(Assets.imagesVectors));
   }
 }
