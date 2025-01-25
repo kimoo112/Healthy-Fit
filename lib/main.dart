@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:healthy_fit/core/cache/cache_helper.dart';
 import 'package:healthy_fit/core/routes/router.dart';
+import 'package:healthy_fit/core/utils/app_colors.dart';
 import 'package:healthy_fit/core/utils/bloc_observer.dart';
 import 'package:healthy_fit/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:healthy_fit/features/home/cubit/home_cubit.dart';
 
 import 'core/api/dio_consumer.dart';
 
@@ -13,11 +16,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
   Bloc.observer = MyBlocObserver();
-  runApp(const MyApp());
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+  ));
+  runApp(const HealthyFit());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class HealthyFit extends StatelessWidget {
+  const HealthyFit({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +32,23 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (_, child) {
-          return BlocProvider(
-            create: (context) => AuthCubit(DioConsumer(dio: Dio())),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => AuthCubit(DioConsumer(dio: Dio())),
+              ),
+              BlocProvider(
+                create: (context) => HomeCubit(DioConsumer(dio: Dio())),
+              ),
+            ],
             child: MaterialApp.router(
               title: 'Healthy Fit',
               routerConfig: router,
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
+                textSelectionTheme: TextSelectionThemeData(
+                    selectionColor: AppColors.primaryColor,
+                    selectionHandleColor: AppColors.primaryColor),
                 useMaterial3: true,
                 textTheme: Theme.of(context).textTheme.apply(
                       fontFamily: 'Poppins',

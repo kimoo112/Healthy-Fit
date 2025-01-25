@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:healthy_fit/core/api/end_points.dart';
+import 'package:healthy_fit/core/cache/cache_helper.dart';
 import 'package:healthy_fit/core/routes/functions/navigation_functions.dart';
 import 'package:healthy_fit/core/routes/routes.dart';
 
@@ -16,7 +18,17 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
-    delayedNavigate(context, onboarding);
+    _checkTokenAndNavigate();
+  }
+
+  void _checkTokenAndNavigate() async {
+    final token = await CacheHelper.getSecuredString(key: ApiKeys.token);
+    debugPrint('Token: $token');
+    if (!mounted) return;
+    delayedNavigate(
+      context,
+      token != '' ? appNavigation : onboarding,
+    );
   }
 
   @override

@@ -8,6 +8,10 @@ void customReplacementNavigate(context, String path) {
   GoRouter.of(context).pushReplacement(path);
 }
 
+void customReplacementAndRemove(context, String path) {
+  GoRouter.of(context).go(path);
+}
+
 void delayedNavigate(context, path) {
   Future.delayed(
     const Duration(seconds: 3),

@@ -24,7 +24,7 @@ class OnboardingPage extends StatelessWidget {
             return Introduction(
               title: item.title,
               subTitle: item.subTitle,
-              titleTextStyle: CustomTextStyles.poppins400Style20Bold,
+              titleTextStyle: CustomTextStyles.poppinsStyle18Bold,
               subTitleTextStyle: CustomTextStyles.poppins400Style12Grey,
               imageUrl: item.imagePath,
               imageHeight: 240.h,
