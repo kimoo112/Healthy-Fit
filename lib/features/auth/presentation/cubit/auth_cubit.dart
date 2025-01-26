@@ -35,7 +35,19 @@ class AuthCubit extends Cubit<AuthState> {
       final token = userProfile.token;
       debugPrint(token);
       debugPrint(userProfile.user!.name);
-      CacheHelper.saveData(key: ApiKeys.token, value: token);
+      await CacheHelper.saveSecuredString(key: ApiKeys.token, value: token!);
+      await CacheHelper.saveData(key: ApiKeys.id, value: userProfile.user!.id);
+      await CacheHelper.saveData(
+          key: ApiKeys.name, value: userProfile.user!.name);
+      await CacheHelper.saveData(
+          key: ApiKeys.weight, value: userProfile.user!.weight);
+      await CacheHelper.saveData(
+          key: ApiKeys.height, value: userProfile.user!.height);
+      await CacheHelper.saveData(
+          key: ApiKeys.age, value: userProfile.user!.age);
+      await CacheHelper.saveData(
+          key: ApiKeys.caloriesGoal, value: userProfile.user!.calorieGoal);
+      debugPrint(CacheHelper.getData(key: userProfile.user!.name!));
       emit(LoginSuccess());
     } on ServerException catch (e) {
       emit(LoginFailure(e.errModel.errorMessage));

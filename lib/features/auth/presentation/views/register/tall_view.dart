@@ -66,7 +66,7 @@ class _TallViewState extends State<TallView> {
                             },
                       text: 'Next',
                       borderRadius: 12,
-                      color: tall == 0
+                      color: tall == 140
                           ? AppColors.primaryColor.withOpacity(.6)
                           : AppColors.primaryColor,
                       textColor: AppColors.white,

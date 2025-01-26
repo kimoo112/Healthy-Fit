@@ -26,12 +26,14 @@ class DioConsumer extends ApiConsumer {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     bool isFromData = false,
+    Map<String, String>? headers,
   }) async {
     try {
       final response = await dio.delete(
         path,
         data: isFromData ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
+        options: Options(headers: headers),
       );
       return response.data;
     } on DioException catch (e) {

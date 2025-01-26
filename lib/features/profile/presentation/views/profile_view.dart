@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:healthy_fit/core/api/end_points.dart';
 import 'package:healthy_fit/core/cache/cache_helper.dart';
+import 'package:healthy_fit/core/routes/routes.dart';
 import 'package:healthy_fit/core/utils/app_text_styles.dart';
 import 'package:iconly/iconly.dart';
 
+import '../../../../core/routes/functions/navigation_functions.dart';
 import '../../../../core/widgets/top_right_vectors.dart';
 
 class ProfileView extends StatelessWidget {
@@ -19,7 +21,13 @@ class ProfileView extends StatelessWidget {
         title: const Text('Account'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              await CacheHelper.removeSecuredString(key: ApiKeys.token);
+              await CacheHelper.clearData();
+              if (context.mounted) {
+                customNavigate(context, login);
+              }
+            },
             icon: const Icon(IconlyBold.logout),
           ),
         ],

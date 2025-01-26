@@ -24,4 +24,5 @@ final class SignUpFailure extends AuthState {
 
   SignUpFailure(this.errMsg);
 }
+
 final class AuthStateUpdated extends AuthState {}

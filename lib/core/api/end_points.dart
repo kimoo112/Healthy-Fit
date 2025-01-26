@@ -11,8 +11,15 @@ class ApiKeys {
   static String password = "password";
   static String token = "token";
   static String message = "message";
+  static String id = "id";
   static String name = "name";
+  static String createdBy = "createdBy";
+  static String category = "category";
+  static String calories = "calories";
   static String age = "age";
   static String height = "height";
   static String weight = "weight";
+  static String goals = "goals";
+  static String caloriesGoal = "caloriesGoal";
+  static String food = "food";
 }

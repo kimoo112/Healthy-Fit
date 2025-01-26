@@ -22,8 +22,8 @@ class CircularSliderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       bottom: -100,
-      right: 0,
-      left: 0,
+      right: 20,
+      left: 20,
       child: SleekCircularSlider(
         initialValue: initialValue,
         min: min ?? 140, // Minimum weight

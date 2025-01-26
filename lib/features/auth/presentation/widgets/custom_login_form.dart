@@ -24,7 +24,7 @@ class CustomLoginForm extends StatelessWidget {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text('Success')))
               .close;
-          customReplacementNavigate(context, onboarding);
+          customReplacementAndRemove(context, appNavigation);
         } else if (state is LoginFailure) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(state.errMessage),
@@ -40,7 +40,7 @@ class CustomLoginForm extends StatelessWidget {
             children: <Widget>[
               Text(
                 'Welcome Back 👋',
-                style: CustomTextStyles.poppins400Style20Bold,
+                style: CustomTextStyles.poppinsStyle20Bold,
               ),
               10.verticalSpace,
               Text(
@@ -92,7 +92,7 @@ class CustomLoginForm extends StatelessWidget {
                       },
                       text: 'Login',
                       textColor: AppColors.white,
-                      borderRadius: 12,
+                      borderRadius: 25.r,
                     )
             ],
           ),

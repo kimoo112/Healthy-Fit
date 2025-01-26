@@ -23,15 +23,15 @@ class _WeightViewState extends State<WeightView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: BlocBuilder<AuthCubit, AuthState>(
-          builder: (context, state) {
-            double weight = context.read<AuthCubit>().weight;
-            return Stack(
-              children: [
-                const TopRightVectors(),
-                Column(
+      body: BlocBuilder<AuthCubit, AuthState>(
+        builder: (context, state) {
+          double weight = context.read<AuthCubit>().weight;
+          return Stack(
+            children: [
+              const TopRightVectors(),
+              Padding(
+                padding: EdgeInsets.all(16.0.sp),
+                child: Column(
                   children: <Widget>[
                     50.verticalSpace,
                     const WelcomeWeightWidget(),
@@ -45,39 +45,38 @@ class _WeightViewState extends State<WeightView> {
                             color: AppColors.limeGreen.withOpacity(.3)),
                         child: Text(
                           "${weight.toInt()} Kg",
-
                           style: CustomTextStyles.poppins400Style20,
                         )),
                   ],
                 ),
-                CircularSliderWidget(
-                  initialValue: weight,
-                  unit:"Kg",
-                  min: 0,
-                  max: 150,
-                  onChange: context.read<AuthCubit>().updateWeight,
-                ),
-                Positioned(
-                    bottom: 0,
-                    right: 0,
-                    left: 0,
-                    child: CustomButton(
-                      onPressed: weight == 0
-                          ? () {}
-                          : () {
-                              customNavigate(context, tallView);
-                            },
-                      text: 'Next',
-                      borderRadius: 12,
-                      color: weight == 0
-                          ? AppColors.primaryColor.withOpacity(.6)
-                          : AppColors.primaryColor,
-                      textColor: AppColors.white,
-                    )),
-              ],
-            );
-          },
-        ),
+              ),
+              CircularSliderWidget(
+                initialValue: weight,
+                unit: "Kg",
+                min: 0,
+                max: 150,
+                onChange: context.read<AuthCubit>().updateWeight,
+              ),
+              Positioned(
+                  bottom: 0,
+                  right: 0,
+                  left: 0,
+                  child: CustomButton(
+                    onPressed: weight == 0
+                        ? () {}
+                        : () {
+                            customNavigate(context, tallView);
+                          },
+                    text: 'Next',
+                    borderRadius: 12,
+                    color: weight == 0
+                        ? AppColors.primaryColor.withOpacity(.6)
+                        : AppColors.primaryColor,
+                    textColor: AppColors.white,
+                  )),
+            ],
+          );
+        },
       ),
     );
   }

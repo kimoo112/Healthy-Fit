@@ -33,6 +33,11 @@ class AddMealView extends StatelessWidget {
           listener: (context, state) {
             if (state is AddFoodsSuccessful) {
               context.read<HomeCubit>().fetchFood();
+            } else if (state is DeleteFoodSuccessful) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Meal Deleted successfully!')),
+              );
+              context.read<HomeCubit>().fetchFood();
             }
           },
           builder: (context, state) {
@@ -55,8 +60,6 @@ class AddMealView extends StatelessWidget {
                             final food =
                                 context.watch<HomeCubit>().myFood[index];
                             return Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -72,7 +75,6 @@ class AddMealView extends StatelessWidget {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // Icon or Image
                                   Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
@@ -83,7 +85,6 @@ class AddMealView extends StatelessWidget {
                                         color: Colors.orange, size: 28),
                                   ),
                                   const SizedBox(width: 12),
-                                  // Meal Details
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -117,10 +118,10 @@ class AddMealView extends StatelessWidget {
                                   ),
                                   // Delete Icon
                                   IconButton(
-                                    icon: const Icon(Icons.delete,
+                                    icon: const Icon(IconlyBroken.delete,
                                         color: Colors.red),
-                                    onPressed: () {
-                                      context
+                                    onPressed: () async {
+                                      await context
                                           .read<HomeCubit>()
                                           .deleteAddedFood(food.id!);
                                     },

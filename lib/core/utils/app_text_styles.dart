@@ -50,8 +50,13 @@ abstract class CustomTextStyles {
     fontWeight: FontWeight.w400,
     fontFamily: "Poppins",
   );
-  static TextStyle poppins400Style20Bold = TextStyle(
+  static TextStyle poppinsStyle20Bold = TextStyle(
     fontSize: 20.sp,
+    fontWeight: FontWeight.bold,
+    fontFamily: "Poppins",
+  );
+  static TextStyle poppinsStyle18Bold = TextStyle(
+    fontSize: 18.sp,
     fontWeight: FontWeight.bold,
     fontFamily: "Poppins",
   );

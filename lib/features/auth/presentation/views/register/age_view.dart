@@ -20,7 +20,7 @@ class AgeView extends StatefulWidget {
 }
 
 class _AgeViewState extends State<AgeView> {
-  DateTime? _selectedDate; 
+  DateTime? _selectedDate;
   int _calculatedAge = 0;
 
   void _pickDate(BuildContext context) async {
@@ -148,7 +148,8 @@ class _AgeViewState extends State<AgeView> {
                           ? () {}
                           : () {
                               context.read<AuthCubit>().age = _calculatedAge;
-                              debugPrint(context.read<AuthCubit>().age.toString());
+                              debugPrint(
+                                  context.read<AuthCubit>().age.toString());
                               customNavigate(context, weightView);
                             },
                       text: 'Next',

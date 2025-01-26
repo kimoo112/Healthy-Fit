@@ -23,5 +23,6 @@ abstract class ApiConsumer {
     Object? data,
     Map<String, dynamic>? queryParameters,
     bool isFromData = false,
+    Map<String, String>? headers,
   });
 }
