@@ -9,12 +9,16 @@ import 'package:healthy_fit/core/utils/app_colors.dart';
 import 'package:healthy_fit/core/utils/bloc_observer.dart';
 import 'package:healthy_fit/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:healthy_fit/features/home/cubit/home_cubit.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'core/api/dio_consumer.dart';
+import 'features/notes/presentation/cubit/notes_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
+  await Hive.initFlutter();
+  await Hive.openBox('caloriesBox');
   Bloc.observer = MyBlocObserver();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
@@ -40,6 +44,9 @@ class HealthyFit extends StatelessWidget {
               BlocProvider(
                 create: (context) => HomeCubit(DioConsumer(dio: Dio())),
               ),
+              BlocProvider(
+                create: (context) => NotesCubit()..fetchNotes(),
+              )
             ],
             child: MaterialApp.router(
               title: 'Healthy Fit',

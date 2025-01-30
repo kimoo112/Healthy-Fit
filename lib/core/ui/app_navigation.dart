@@ -7,6 +7,9 @@ import 'package:healthy_fit/features/home/presentation/views/home_view.dart';
 import 'package:healthy_fit/features/profile/presentation/views/profile_view.dart';
 import 'package:iconly/iconly.dart';
 
+import '../../features/home/presentation/views/charts_view.dart';
+import '../../features/notes/presentation/views/notes_view.dart';
+
 class AppNavigation extends StatefulWidget {
   const AppNavigation({super.key});
 
@@ -33,13 +36,13 @@ class _AppNavigationState extends State<AppNavigation> {
             page: const HomeView(),
           ),
           FloatingNavBarItem(
-              iconData: IconlyBold.search,
-              title: 'Search',
-              page: const HomeView()),
+              iconData: IconlyBold.paper_plus,
+              title: 'Notes',
+              page: const NotesView()),
           FloatingNavBarItem(
             iconData: IconlyBold.chart,
-            title: 'Settings',
-            page: const HomeView(),
+            title: 'Charts',
+            page: const WeeklyCaloriesChartView(),
           ),
           FloatingNavBarItem(
             iconData: IconlyBold.profile,
