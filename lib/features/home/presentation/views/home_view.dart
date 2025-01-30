@@ -48,9 +48,8 @@ class _HomeViewState extends State<HomeView> {
                 _buildHomeTitle(),
                 22.verticalSpace,
                 CaloriesContainer(
-                  calorieGoal: calorieGoal,
-                  myCalories: myCalories,
-                ),
+                    calorieGoal: calorieGoal,
+                    userId: CacheHelper.getData(key: ApiKeys.id)),
                 8.verticalSpace,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

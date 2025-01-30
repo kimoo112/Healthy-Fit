@@ -58,3 +58,15 @@ final class DeleteFoodFailure extends HomeState {
 
   DeleteFoodFailure({required this.errorMessage});
 }
+
+class GetWeeklyCaloriesLoading extends HomeState {}
+
+class GetWeeklyCaloriesSuccess extends HomeState {
+  final List<double> weeklyCalories;
+  GetWeeklyCaloriesSuccess({required this.weeklyCalories});
+}
+
+class GetWeeklyCaloriesFailure extends HomeState {
+  final String errMsg;
+  GetWeeklyCaloriesFailure({required this.errMsg});
+}
