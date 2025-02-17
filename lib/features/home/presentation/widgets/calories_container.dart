@@ -17,7 +17,7 @@ class CaloriesContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final box = Hive.box('caloriesBox'); // ✅ Access Hive Box
+    final box = Hive.box('nutritionBox'); // ✅ Access Hive Box
 
     return ValueListenableBuilder(
       valueListenable: box.listenable(), // ✅ Listen for changes
@@ -26,7 +26,8 @@ class CaloriesContainer extends StatelessWidget {
         final currentCalories = box.get('myCalories_$userId', defaultValue: 0);
         debugPrint("Current Calories: $currentCalories"); // ✅ Debug print
 
-        double progressPercentage = (currentCalories / (calorieGoal ?? 2000)) * 100;
+        double progressPercentage =
+            (currentCalories / (calorieGoal ?? 2000)) * 100;
 
         Color progressColor;
         if (progressPercentage < 40) {
@@ -64,7 +65,8 @@ class CaloriesContainer extends StatelessWidget {
                   shadowMaxOpacity: .0010,
                   shadowColor: AppColors.limeGreen.withOpacity(.00001),
                 ),
-                customWidths: CustomSliderWidths(progressBarWidth: 20, trackWidth: 20),
+                customWidths:
+                    CustomSliderWidths(progressBarWidth: 20, trackWidth: 20),
               ),
               min: 0,
               max: calorieGoal?.toDouble() ?? 2000,

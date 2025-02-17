@@ -57,7 +57,8 @@ class CacheHelper {
     const storage = FlutterSecureStorage();
     return await storage.read(key: key) ?? '';
   }
-   static removeSecuredString({required String key}) async {
+
+  static removeSecuredString({required String key}) async {
     const storage = FlutterSecureStorage();
     return await storage.delete(key: key);
   }

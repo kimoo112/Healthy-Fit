@@ -2,6 +2,7 @@ class EndPoint {
   static String baseUrl = "https://rcipe-4lfy.vercel.app/api/";
   static String login = "users/login";
   static String register = "users/register";
+  static String setCalorieGoal = "goals/set";
 }
 
 class ApiKeys {
@@ -21,5 +22,6 @@ class ApiKeys {
   static String weight = "weight";
   static String goals = "goals";
   static String caloriesGoal = "caloriesGoal";
+  static String calorieGoal = "calorieGoal";
   static String food = "food";
 }

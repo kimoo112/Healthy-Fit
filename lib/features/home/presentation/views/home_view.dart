@@ -11,6 +11,7 @@ import 'package:healthy_fit/features/home/presentation/widgets/food_list_view.da
 
 import '../../../../core/routes/routes.dart';
 import '../widgets/calories_container.dart';
+import '../widgets/carbs_fats_container.dart';
 import '../widgets/user_info.dart';
 
 class HomeView extends StatefulWidget {
@@ -25,9 +26,8 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     context.read<HomeCubit>().fetchCaloriesGoals();
-    context.read<HomeCubit>().fetchFood();
+    context.read<HomeCubit>().fetchFood(context);
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +39,6 @@ class _HomeViewState extends State<HomeView> {
                 CacheHelper.getData(key: ApiKeys.caloriesGoal) as int?;
             int? calorieGoal = cachedCalories ??
                 (state is GetCaloriesGoalSuccess ? state.calorieGoal : null);
-            int myCalories = context.read<HomeCubit>().myCalories;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -50,6 +49,8 @@ class _HomeViewState extends State<HomeView> {
                 CaloriesContainer(
                     calorieGoal: calorieGoal,
                     userId: CacheHelper.getData(key: ApiKeys.id)),
+                8.verticalSpace,
+                const CarbsAndFatsContainer(),
                 8.verticalSpace,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

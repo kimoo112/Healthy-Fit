@@ -9,11 +9,14 @@ import 'package:healthy_fit/features/auth/presentation/views/register/tall_view.
 import 'package:healthy_fit/features/auth/presentation/views/register/weight_view.dart';
 import 'package:healthy_fit/features/home/presentation/views/add_meal_view.dart';
 import 'package:healthy_fit/features/onboarding/presentation/views/onboarding_view.dart';
+import 'package:healthy_fit/features/profile/presentation/views/general_settings_view.dart';
 import 'package:healthy_fit/features/profile/presentation/views/profile_view.dart';
+import 'package:healthy_fit/features/profile/presentation/views/subscription_view.dart';
 import 'package:healthy_fit/features/splash/presentation/views/splash_view.dart';
 
 import '../../features/auth/presentation/views/register/gender_view.dart';
-import '../../features/home/data/food_model/food_model.dart';
+import '../../features/auth/presentation/views/register/goal_selection_view.dart';
+import '../../features/home/data/food_model/food_model/food_model.dart';
 import '../../features/home/presentation/views/food_details_view.dart';
 
 final GoRouter router = GoRouter(
@@ -67,6 +70,12 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
+      path: goalSelectionView,
+      builder: (BuildContext context, GoRouterState state) {
+        return const GoalSelectionView();
+      },
+    ),
+    GoRoute(
       path: appNavigation,
       builder: (BuildContext context, GoRouterState state) {
         return const AppNavigation();
@@ -89,6 +98,18 @@ final GoRouter router = GoRouter(
       path: profileView,
       builder: (BuildContext context, GoRouterState state) {
         return const ProfileView();
+      },
+    ),
+     GoRoute(
+      path: subscriptionView,
+      builder: (BuildContext context, GoRouterState state) {
+        return const SubscriptionView();
+      },
+    ),
+       GoRoute(
+      path: generalSettingsView,
+      builder: (BuildContext context, GoRouterState state) {
+        return const GeneralSettingsView();
       },
     ),
   ],

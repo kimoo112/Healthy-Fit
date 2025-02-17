@@ -30,7 +30,9 @@ void handleDioExceptions(DioException e) {
               errModel: ErrorModel.fromJson(e.response!.data));
         case 401: //unauthorized
           throw ServerException(
-              errModel: ErrorModel.fromJson(e.response!.data));
+              errModel:
+                  ErrorModel(errorMessage: "Not authorized, token failed"));
+
         case 403: //forbidden
           throw ServerException(
               errModel: ErrorModel.fromJson(e.response!.data));

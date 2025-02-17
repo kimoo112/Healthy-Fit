@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:healthy_fit/core/widgets/custom_button.dart';
-import 'package:healthy_fit/features/home/data/food_model/food_model.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../cubit/home_cubit.dart';
+import '../../data/food_model/food_model/food_model.dart';
 
 class FoodDetailsScreen extends StatefulWidget {
   final FoodModel foodItem;
@@ -25,6 +25,8 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     int totalCalories = widget.foodItem.calories! * _quantity;
+    int totalProtein = widget.foodItem.protein! * _quantity;
+    int totalCarbohydrate = widget.foodItem.carbohydrate! * _quantity;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Food Details'),
@@ -95,14 +97,47 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                const Text(
+                  'Total Protein: ',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  '$totalProtein g',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                const Text(
+                  'Total Carbs: ',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  '$totalCarbohydrate g',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor),
+                ),
+              ],
+            ),
             const Spacer(),
             CustomButton(
               text: 'Eat Now',
               textColor: AppColors.white,
               fontSize: 14.sp,
               onPressed: () {
-                context.read<HomeCubit>().updateCalories(totalCalories);
-                context.read<HomeCubit>().fetchFood();
+                context.read<HomeCubit>().updateNutrition(
+                    totalCalories, totalProtein, totalCarbohydrate);
+                context.read<HomeCubit>().fetchFood(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       backgroundColor: AppColors.limeGreen,

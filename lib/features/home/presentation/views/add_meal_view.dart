@@ -32,12 +32,12 @@ class AddMealView extends StatelessWidget {
         child: BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
             if (state is AddFoodsSuccessful) {
-              context.read<HomeCubit>().fetchFood();
+              context.read<HomeCubit>().fetchFood(context);
             } else if (state is DeleteFoodSuccessful) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Meal Deleted successfully!')),
               );
-              context.read<HomeCubit>().fetchFood();
+              context.read<HomeCubit>().fetchFood(context);
             }
           },
           builder: (context, state) {

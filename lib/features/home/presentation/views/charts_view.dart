@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../../../../core/utils/app_colors.dart';
 import '../../cubit/home_cubit.dart';
 
 class WeeklyCaloriesChartView extends StatefulWidget {
@@ -17,7 +18,7 @@ class _WeeklyCaloriesChartViewState extends State<WeeklyCaloriesChartView> {
   @override
   void initState() {
     super.initState();
-    context.read<HomeCubit>().fetchWeeklyCalories(); // ✅ Fetch data on init
+    context.read<HomeCubit>().fetchWeeklyNutrition(); 
   }
 
   @override
@@ -25,12 +26,15 @@ class _WeeklyCaloriesChartViewState extends State<WeeklyCaloriesChartView> {
     return Scaffold(
       body: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
-          if (state is GetWeeklyCaloriesLoading) {
+          if (state is GetWeeklyNutritionLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is GetWeeklyCaloriesSuccess) {
-            // ✅ Use the weeklyCalories from the state
-            return _buildChart(state.weeklyCalories.cast<double>());
-          } else if (state is GetWeeklyCaloriesFailure) {
+          } else if (state is GetWeeklyNutritionSuccess) {
+            return _buildChart(
+              state.weeklyCalories,
+              state.weeklyProtein,
+              state.weeklyCarbs,
+            );
+          } else if (state is GetWeeklyNutritionFailure) {
             debugPrint(state.errMsg);
             return Center(child: Text("Error: ${state.errMsg}"));
           } else {
@@ -41,20 +45,28 @@ class _WeeklyCaloriesChartViewState extends State<WeeklyCaloriesChartView> {
     );
   }
 
-  Widget _buildChart(List<double> weeklyCalories) {
-    final List<ChartData> chartData = _mapCaloriesToChartData(weeklyCalories);
+  Widget _buildChart(
+    List<double> weeklyCalories,
+    List<double> weeklyProtein,
+    List<double> weeklyCarbs,
+  ) {
+    final List<ChartData> chartData = _mapNutritionToChartData(
+      weeklyCalories,
+      weeklyProtein,
+      weeklyCarbs,
+    );
 
     return Padding(
-      padding: EdgeInsets.only(bottom:60.0.sp,top:30.sp),
+      padding: EdgeInsets.only(bottom: 60.0.sp, top: 30.sp),
       child: SfCartesianChart(
-        title: const ChartTitle(text: "Weekly Calories"),
+        title: const ChartTitle(text: "Weekly Nutrition"),
         legend: const Legend(isVisible: true),
         tooltipBehavior: TooltipBehavior(enable: true),
         primaryXAxis: const CategoryAxis(
           title: AxisTitle(text: "Days of the Week"),
         ),
         primaryYAxis: const NumericAxis(
-          title: AxisTitle(text: "Calories"),
+          title: AxisTitle(text: "Amount"),
           minimum: 0,
         ),
         series: <CartesianSeries<dynamic, dynamic>>[
@@ -63,7 +75,23 @@ class _WeeklyCaloriesChartViewState extends State<WeeklyCaloriesChartView> {
             xValueMapper: (ChartData data, _) => data.day,
             yValueMapper: (ChartData data, _) => data.calories,
             name: "Calories",
-            color: Colors.blue,
+            color: AppColors.limeGreen,
+            dataLabelSettings: const DataLabelSettings(isVisible: true),
+          ),
+          ColumnSeries<ChartData, String>(
+            dataSource: chartData,
+            xValueMapper: (ChartData data, _) => data.day,
+            yValueMapper: (ChartData data, _) => data.protein,
+            name: "Protein",
+            color: AppColors.red,
+            dataLabelSettings: const DataLabelSettings(isVisible: true),
+          ),
+          ColumnSeries<ChartData, String>(
+            dataSource: chartData,
+            xValueMapper: (ChartData data, _) => data.day,
+            yValueMapper: (ChartData data, _) => data.carbs,
+            name: "Carbs",
+            color: AppColors.orange,
             dataLabelSettings: const DataLabelSettings(isVisible: true),
           ),
         ],
@@ -71,12 +99,20 @@ class _WeeklyCaloriesChartViewState extends State<WeeklyCaloriesChartView> {
     );
   }
 
-  List<ChartData> _mapCaloriesToChartData(List<double> weeklyCalories) {
+  List<ChartData> _mapNutritionToChartData(
+    List<double> weeklyCalories,
+    List<double> weeklyProtein,
+    List<double> weeklyCarbs,
+  ) {
     const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     return List.generate(
       weeklyCalories.length,
-      (index) =>
-          ChartData(day: daysOfWeek[index], calories: weeklyCalories[index]),
+      (index) => ChartData(
+        day: daysOfWeek[index],
+        calories: weeklyCalories[index],
+        protein: weeklyProtein[index],
+        carbs: weeklyCarbs[index],
+      ),
     );
   }
 }
@@ -84,6 +120,13 @@ class _WeeklyCaloriesChartViewState extends State<WeeklyCaloriesChartView> {
 class ChartData {
   final String day;
   final double calories;
+  final double protein;
+  final double carbs;
 
-  ChartData({required this.day, required this.calories});
+  ChartData({
+    required this.day,
+    required this.calories,
+    required this.protein,
+    required this.carbs,
+  });
 }
