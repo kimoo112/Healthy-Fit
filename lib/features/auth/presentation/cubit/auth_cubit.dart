@@ -19,10 +19,35 @@ class AuthCubit extends Cubit<AuthState> {
   final TextEditingController signupEmail = TextEditingController();
   final TextEditingController signupPassword = TextEditingController();
   final TextEditingController signupConfirmPassword = TextEditingController();
+
+  int? selectedGoal;
   String userGender = '';
   double weight = 0;
   double tall = 140;
   int age = 0;
+
+  final List<Map<String, dynamic>> goals = [
+    {"title": "Lose weight", "icon": "assets/images/lose_weight.png"},
+    {"title": "Gain weight", "icon": "assets/images/gain_weight.png"},
+    {"title": "Stay healthy", "icon": "assets/images/stay_healthy.png"},
+  ];
+
+  void selectGoal(int index) {
+    selectedGoal = index;
+    emit(AuthStateUpdated());
+  }
+
+  int _calculateCalorieGoal(double weight, double height, int age, int goal) {
+    double bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+    double baseCalories = bmr * 1.4;
+
+    if (goal == 0) {
+      return (baseCalories * 0.8).toInt();
+    } else if (goal == 1) {
+      return (baseCalories * 1.2).toInt();
+    }
+    return baseCalories.toInt();
+  }
 
   login() async {
     emit(LoginLoading());
@@ -33,8 +58,6 @@ class AuthCubit extends Cubit<AuthState> {
       });
       final userProfile = LoginResponseModel.fromJson(response);
       final token = userProfile.token;
-      debugPrint(token);
-      debugPrint(userProfile.user!.name);
       await CacheHelper.saveSecuredString(key: ApiKeys.token, value: token!);
       await CacheHelper.saveData(key: ApiKeys.id, value: userProfile.user!.id);
       await CacheHelper.saveData(
@@ -47,7 +70,6 @@ class AuthCubit extends Cubit<AuthState> {
           key: ApiKeys.age, value: userProfile.user!.age);
       await CacheHelper.saveData(
           key: ApiKeys.caloriesGoal, value: userProfile.user!.calorieGoal);
-      debugPrint(CacheHelper.getData(key: userProfile.user!.name!));
       emit(LoginSuccess());
     } on ServerException catch (e) {
       emit(LoginFailure(e.errModel.errorMessage));
@@ -56,6 +78,8 @@ class AuthCubit extends Cubit<AuthState> {
 
   signup() async {
     emit(SignUpLoading());
+    int calorieGoal =
+        _calculateCalorieGoal(weight, tall, age, selectedGoal ?? 0);
     try {
       await api.post(EndPoint.register, data: {
         ApiKeys.name: signupName.text,
@@ -63,8 +87,10 @@ class AuthCubit extends Cubit<AuthState> {
         ApiKeys.password: signupPassword.text,
         ApiKeys.height: tall.toInt().toString(),
         ApiKeys.age: age.toInt().toString(),
-        ApiKeys.weight: weight.toInt().toString()
+        ApiKeys.weight: weight.toInt().toString(),
+        ApiKeys.calorieGoal: calorieGoal
       });
+      debugPrint('Calorie Goal is $calorieGoal');
       emit(SignUpSuccess());
     } on ServerException catch (e) {
       emit(SignUpFailure(e.errModel.errorMessage));

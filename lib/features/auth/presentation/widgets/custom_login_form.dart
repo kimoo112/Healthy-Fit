@@ -27,7 +27,7 @@ class CustomLoginForm extends StatelessWidget {
           customReplacementAndRemove(context, appNavigation);
         } else if (state is LoginFailure) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(state.errMessage),
+            content: Text(state.errorMessage),
           ));
         }
       },

@@ -34,7 +34,7 @@ class _CustomSignupFormState extends State<CustomSignupForm> {
           customReplacementNavigate(context, login);
         } else if (state is SignUpFailure) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(state.errMsg),
+            content: Text(state.errorMessage),
           ));
         }
       },

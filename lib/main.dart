@@ -12,7 +12,6 @@ import 'package:healthy_fit/features/home/cubit/home_cubit.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'core/api/dio_consumer.dart';
-import 'features/notes/presentation/cubit/notes_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,9 +43,6 @@ class HealthyFit extends StatelessWidget {
               BlocProvider(
                 create: (context) => HomeCubit(DioConsumer(dio: Dio())),
               ),
-              BlocProvider(
-                create: (context) => NotesCubit()..fetchNotes(),
-              )
             ],
             child: MaterialApp.router(
               title: 'Healthy Fit',

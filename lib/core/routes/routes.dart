@@ -11,4 +11,5 @@ const String addMealsView = '/addMealsView';
 const String foodDetails = '/foodDetails';
 const String profileView = '/profileView';
 const String subscriptionView = '/subscriptionView';
+const String cardView = '/cardView';
 const String generalSettingsView = '/generalSettingsView';

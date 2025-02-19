@@ -26,8 +26,12 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     context.read<HomeCubit>().fetchCaloriesGoals();
+    context
+        .read<HomeCubit>()
+        .checkForMidnightReset(CacheHelper.getData(key: ApiKeys.id));
     context.read<HomeCubit>().fetchFood(context);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

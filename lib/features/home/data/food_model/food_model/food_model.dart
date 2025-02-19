@@ -1,9 +1,13 @@
+import 'created_by.dart';
+
 class FoodModel {
   String? id;
   String? name;
   String? category;
   int? calories;
-  dynamic createdBy;
+  int? protein;
+  int? carbohydrate;
+  CreatedBy? createdBy;
   int? v;
 
   FoodModel({
@@ -11,6 +15,8 @@ class FoodModel {
     this.name,
     this.category,
     this.calories,
+    this.protein,
+    this.carbohydrate,
     this.createdBy,
     this.v,
   });
@@ -20,7 +26,11 @@ class FoodModel {
         name: json['name'] as String?,
         category: json['category'] as String?,
         calories: json['calories'] as int?,
-        createdBy: json['createdBy'] as dynamic,
+        protein: json['protein'] as int?,
+        carbohydrate: json['carbohydrate'] as int?,
+        createdBy: json['createdBy'] == null
+            ? null
+            : CreatedBy.fromJson(json['createdBy'] as Map<String, dynamic>),
         v: json['__v'] as int?,
       );
 
@@ -29,7 +39,9 @@ class FoodModel {
         'name': name,
         'category': category,
         'calories': calories,
-        'createdBy': createdBy,
+        'protein': protein,
+        'carbohydrate': carbohydrate,
+        'createdBy': createdBy?.toJson(),
         '__v': v,
       };
 }

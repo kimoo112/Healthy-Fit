@@ -1,28 +1,43 @@
 part of 'auth_cubit.dart';
 
-@immutable
-sealed class AuthState {}
+abstract class AuthState {}
 
-final class AuthInitial extends AuthState {}
+class AuthInitial extends AuthState {}
 
-final class LoginLoading extends AuthState {}
+class AuthStateUpdated extends AuthState {}
 
-final class LoginSuccess extends AuthState {}
+class LoginLoading extends AuthState {}
 
-final class LoginFailure extends AuthState {
-  final String errMessage;
+class LoginSuccess extends AuthState {}
 
-  LoginFailure(this.errMessage);
+class LoginFailure extends AuthState {
+  final String errorMessage;
+  LoginFailure(this.errorMessage);
 }
 
-final class SignUpLoading extends AuthState {}
+class SignUpLoading extends AuthState {}
 
-final class SignUpSuccess extends AuthState {}
+class SignUpSuccess extends AuthState {}
 
-final class SignUpFailure extends AuthState {
-  final String errMsg;
-
-  SignUpFailure(this.errMsg);
+class SignUpFailure extends AuthState {
+  final String errorMessage;
+  SignUpFailure(this.errorMessage);
 }
 
-final class AuthStateUpdated extends AuthState {}
+// Goal Selection States
+class GoalSelected extends AuthState {
+  final int selectedGoal;
+  GoalSelected(this.selectedGoal);
+}
+
+class GoalLoading extends AuthState {}
+
+class GoalSuccess extends AuthState {
+  final int calorieGoal;
+  GoalSuccess(this.calorieGoal);
+}
+
+class GoalFailure extends AuthState {
+  final String error;
+  GoalFailure(this.error);
+}

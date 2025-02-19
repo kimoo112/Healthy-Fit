@@ -2,11 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:healthy_fit/core/api/end_points.dart';
 import 'package:healthy_fit/core/api/exceptions.dart';
-import 'package:healthy_fit/features/home/data/food_model/food_model.dart';
+import 'package:healthy_fit/core/routes/routes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../core/api/api_consumer.dart';
 import '../../../core/cache/cache_helper.dart';
+import '../../../core/routes/functions/navigation_functions.dart';
+import '../data/food_model/food_model/food_model.dart';
 
 part 'home_state.dart';
 
@@ -16,6 +18,8 @@ class HomeCubit extends Cubit<HomeState> {
 
   late int calorieGoal;
   int myCalories = 0;
+  int myProtein = 0;
+  int myCarbs = 0;
   List<FoodModel> foodItems = [];
   List<FoodModel> myFood = [];
   TextEditingController meal = TextEditingController();
@@ -44,7 +48,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  fetchFood() async {
+  fetchFood(context) async {
     emit(GetFoodsLoading());
     final token = await CacheHelper.getSecuredString(key: ApiKeys.token);
     final userId = CacheHelper.getData(key: ApiKeys.id);
@@ -54,16 +58,16 @@ class HomeCubit extends Cubit<HomeState> {
           .get(ApiKeys.food, headers: {'Authorization': 'Bearer $token'});
       foodItems =
           (response as List).map((item) => FoodModel.fromJson(item)).toList();
-      myFood =
-          foodItems.where((food) => food.createdBy['_id'] == userId).toList();
+      myFood = foodItems.where((food) => food.createdBy!.id == userId).toList();
       debugPrint("Your food is ${myFood.length}");
 
       emit(GetFoodsLoaded(foodItems: foodItems));
     } on ServerException catch (e) {
       if (e.errModel.errorMessage == "Not authorized, token failed") {
-        // Check if error is 401 Unauthorized
         await CacheHelper.removeSecuredString(key: ApiKeys.token);
+        customReplacementAndRemove(context, login);
       }
+
       emit(GetFoodsFailure(errMsg: e.errModel.errorMessage));
     }
   }
@@ -117,89 +121,157 @@ class HomeCubit extends Cubit<HomeState> {
       }
     }
   }
-void updateCalories(int calories) async {
-  final userId = CacheHelper.getData(key: ApiKeys.id);
-  if (userId == null) return;
 
-  var box = Hive.box('caloriesBox');
-  final calorieKey = 'myCalories_$userId';
+  void updateNutrition(
+    int calories,
+    int protein,
+    int carbs,
+  ) async {
+    final userId = CacheHelper.getData(key: ApiKeys.id);
+    if (userId == null) return;
 
-  int myCalories = box.get(calorieKey, defaultValue: 0);
-  myCalories += calories;
+    var box = Hive.box('nutritionBox');
+      await checkForMidnightReset(userId); 
 
-  if (myCalories > calorieGoal) myCalories = calorieGoal;
+    final calorieKey = 'myCalories_$userId';
+    final proteinKey = 'myProtein_$userId';
+    final carbsKey = 'myCarbs_$userId';
 
-  box.put(calorieKey, myCalories);
+    // Update calories
+    int myCalories = box.get(calorieKey, defaultValue: 0);
+    myCalories += calories;
+    if (myCalories > calorieGoal) myCalories = calorieGoal;
+    box.put(calorieKey, myCalories);
 
-  // ✅ Update the weekly calories data
-  await _updateWeeklyCalories(userId, myCalories);
+    int myProtein = box.get(proteinKey, defaultValue: 0);
+    myProtein += protein;
+    box.put(proteinKey, myProtein);
 
-  emit(UpdateCaloriesGoal(myCalories: myCalories));
+    int myCarbs = box.get(carbsKey, defaultValue: 0);
+    myCarbs += carbs;
+    box.put(carbsKey, myCarbs);
 
-  // ✅ Fetch and update the weekly calories data
-  await fetchWeeklyCalories();
-}
 
-Future<void> _updateWeeklyCalories(String userId, int myCalories) async {
-  var box = Hive.box('caloriesBox');
-  List<int> weeklyCalories =
-      box.get('weeklyCalories_$userId', defaultValue: List.filled(7, 0));
+    await _updateWeeklyNutrition(
+      userId,
+      myCalories,
+      myProtein,
+      myCarbs,
+    );
 
-  DateTime now = DateTime.now();
-  int weekdayIndex = now.weekday - 1; // Monday = 0, Sunday = 6
+    emit(UpdateNutritionGoal(
+      myCalories: myCalories,
+      myProtein: myProtein,
+      myCarbs: myCarbs,
+    ));
 
-  // ✅ Update the current day's calories
-  weeklyCalories[weekdayIndex] = myCalories;
+    // ✅ Fetch and update the weekly nutrition data
+    await fetchWeeklyNutrition();
+  }
 
-  // ✅ Save the updated weekly calories back to Hive
-  box.put('weeklyCalories_$userId', weeklyCalories);
-} 
+  Future<void> _updateWeeklyNutrition(
+      String userId, int myCalories, int myProtein, int myCarbs) async {
+    var box = Hive.box('nutritionBox');
+    List<int> weeklyCalories =
+        box.get('weeklyCalories_$userId', defaultValue: List.filled(7, 0));
+    List<int> weeklyProtein =
+        box.get('weeklyProtein_$userId', defaultValue: List.filled(7, 0));
+    List<int> weeklyCarbs =
+        box.get('weeklyCarbs_$userId', defaultValue: List.filled(7, 0));
 
-  Future<void> _checkForMidnightReset(String userId) async {
+    DateTime now = DateTime.now();
+    int weekdayIndex = now.weekday - 1; // Monday = 0, Sunday = 6
+
+    // ✅ Update the current day's nutrition
+    weeklyCalories[weekdayIndex] = myCalories;
+    weeklyProtein[weekdayIndex] = myProtein;
+    weeklyCarbs[weekdayIndex] = myCarbs;
+
+    // ✅ Save the updated weekly nutrition back to Hive
+    box.put('weeklyCalories_$userId', weeklyCalories);
+    box.put('weeklyProtein_$userId', weeklyProtein);
+    box.put('weeklyCarbs_$userId', weeklyCarbs);
+  }
+
+  Future<void> fetchWeeklyNutrition() async {
+    emit(GetWeeklyNutritionLoading());
+    try {
+      var box = Hive.box('nutritionBox');
+      final userId = CacheHelper.getData(key: ApiKeys.id);
+      if (userId == null) {
+        emit(GetWeeklyNutritionFailure(errMsg: "User ID is null."));
+        return;
+      }
+
+      await checkForMidnightReset(userId); 
+      List<int> weeklyCalories =
+          box.get('weeklyCalories_$userId', defaultValue: List.filled(7, 0));
+      List<int> weeklyProtein =
+          box.get('weeklyProtein_$userId', defaultValue: List.filled(7, 0));
+      List<int> weeklyCarbs =
+          box.get('weeklyCarbs_$userId', defaultValue: List.filled(7, 0));
+
+      debugPrint("Fetched Weekly Calories: $weeklyCalories");
+      debugPrint("Fetched Weekly Protein: $weeklyProtein");
+      debugPrint("Fetched Weekly Carbs: $weeklyCarbs");
+
+      List<double> weeklyCaloriesInDouble =
+          weeklyCalories.map((e) => e.toDouble()).toList();
+      List<double> weeklyProteinInDouble =
+          weeklyProtein.map((e) => e.toDouble()).toList();
+      List<double> weeklyCarbsInDouble =
+          weeklyCarbs.map((e) => e.toDouble()).toList();
+
+      emit(GetWeeklyNutritionSuccess(
+        weeklyCalories: weeklyCaloriesInDouble,
+        weeklyProtein: weeklyProteinInDouble,
+        weeklyCarbs: weeklyCarbsInDouble,
+      ));
+    } catch (e) {
+      emit(GetWeeklyNutritionFailure(errMsg: e.toString()));
+    }
+  }
+
+  Future<void> checkForMidnightReset(String userId) async {
     DateTime now = DateTime.now();
     String todayDate = "${now.year}-${now.month}-${now.day}";
 
-    var box = Hive.box('caloriesBox');
+    var box = Hive.box('nutritionBox');
 
     String? lastResetDate = box.get('lastResetDate_$userId');
 
     if (lastResetDate != todayDate) {
       List<int> weeklyCalories =
           box.get('weeklyCalories_$userId', defaultValue: List.filled(7, 0));
+      List<int> weeklyProtein =
+          box.get('weeklyProtein_$userId', defaultValue: List.filled(7, 0));
+      List<int> weeklyCarbs =
+          box.get('weeklyCarbs_$userId', defaultValue: List.filled(7, 0));
 
       int weekdayIndex = now.weekday - 1; // Monday = 0, Sunday = 6
-      weeklyCalories[weekdayIndex] = myCalories; // Store today's calories
 
+      // ✅ Store today's nutrition
+      weeklyCalories[weekdayIndex] = myCalories;
+      weeklyProtein[weekdayIndex] = myProtein;
+      weeklyCarbs[weekdayIndex] = myCarbs;
+
+      // ✅ Save the updated weekly nutrition
       box.put('weeklyCalories_$userId', weeklyCalories);
+      box.put('weeklyProtein_$userId', weeklyProtein);
+      box.put('weeklyCarbs_$userId', weeklyCarbs);
+
+      // ✅ Reset daily nutrition
+      box.put('myCalories_$userId', 0);
+      box.put('myProtein_$userId', 0);
+      box.put('myCarbs_$userId', 0);
       box.put('lastResetDate_$userId', todayDate);
-      box.put('myCalories_$userId', 0); // Reset daily calories after storing
 
       // If it's Monday, reset the entire weekly data
       if (weekdayIndex == 0) {
         box.put('weeklyCalories_$userId', List.filled(7, 0));
+        box.put('weeklyProtein_$userId', List.filled(7, 0));
+        box.put('weeklyCarbs_$userId', List.filled(7, 0));
       }
     }
   }
-Future<void> fetchWeeklyCalories() async {
-  emit(GetWeeklyCaloriesLoading());
-  try {
-    var box = Hive.box('caloriesBox');
-    final userId = CacheHelper.getData(key: ApiKeys.id);
-    if (userId == null) {
-      emit(GetWeeklyCaloriesFailure(errMsg: "User ID is null."));
-      return;
-    }
-
-    await _checkForMidnightReset(userId); // ✅ Ensure data is reset if needed
-    List<int> weeklyCalories =
-        box.get('weeklyCalories_$userId', defaultValue: List.filled(7, 0));
-    debugPrint("Fetched Weekly Calories: $weeklyCalories");
-
-    List<double> weeklyCaloriesInDouble =
-        weeklyCalories.map((e) => e.toDouble()).toList();
-    emit(GetWeeklyCaloriesSuccess(weeklyCalories: weeklyCaloriesInDouble));
-  } catch (e) {
-    emit(GetWeeklyCaloriesFailure(errMsg: e.toString()));
-  }
-}
 }

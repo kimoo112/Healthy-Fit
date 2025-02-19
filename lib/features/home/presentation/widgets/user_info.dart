@@ -21,6 +21,7 @@ class UserInfo extends StatelessWidget {
         ),
         6.horizontalSpace,
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Welcome ',

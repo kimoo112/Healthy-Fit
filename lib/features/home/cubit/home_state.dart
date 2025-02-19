@@ -43,10 +43,16 @@ final class AddFoodsFailure extends HomeState {
   AddFoodsFailure({required this.errMsg});
 }
 
-final class UpdateCaloriesGoal extends HomeState {
+final class UpdateNutritionGoal extends HomeState {
   final int myCalories;
+  final int myProtein;
+  final int myCarbs;
 
-  UpdateCaloriesGoal({required this.myCalories});
+  UpdateNutritionGoal({
+    required this.myCalories,
+    required this.myProtein,
+    required this.myCarbs,
+  });
 }
 
 final class DeleteFoodLoading extends HomeState {}
@@ -59,14 +65,22 @@ final class DeleteFoodFailure extends HomeState {
   DeleteFoodFailure({required this.errorMessage});
 }
 
-class GetWeeklyCaloriesLoading extends HomeState {}
+class GetWeeklyNutritionLoading extends HomeState {}
 
-class GetWeeklyCaloriesSuccess extends HomeState {
+class GetWeeklyNutritionSuccess extends HomeState {
   final List<double> weeklyCalories;
-  GetWeeklyCaloriesSuccess({required this.weeklyCalories});
+  final List<double> weeklyProtein;
+  final List<double> weeklyCarbs;
+
+  GetWeeklyNutritionSuccess({
+    required this.weeklyCalories,
+    required this.weeklyProtein,
+    required this.weeklyCarbs,
+  });
 }
 
-class GetWeeklyCaloriesFailure extends HomeState {
+class GetWeeklyNutritionFailure extends HomeState {
   final String errMsg;
-  GetWeeklyCaloriesFailure({required this.errMsg});
+
+  GetWeeklyNutritionFailure({required this.errMsg});
 }

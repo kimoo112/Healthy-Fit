@@ -62,7 +62,7 @@ class _TallViewState extends State<TallView> {
                       onPressed: tall == 140
                           ? () {}
                           : () {
-                              customNavigate(context, signup);
+                              customNavigate(context, goalSelectionView);
                             },
                       text: 'Next',
                       borderRadius: 12,

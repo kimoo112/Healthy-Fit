@@ -248,6 +248,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutterme_credit_card:
+    dependency: "direct main"
+    description:
+      name: flutterme_credit_card
+      sha256: cafe2d3adb4adf3e5158e5cd61b28b9aa3f2e8c493c1ced8b0fbb40e71139bf7
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.2"
   gap:
     dependency: transitive
     description:
