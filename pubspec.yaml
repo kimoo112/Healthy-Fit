@@ -24,9 +24,11 @@ dependencies:
   hive_flutter: ^1.1.0
   iconly: ^1.0.1
   icons_launcher: ^3.0.0
+  image_picker: ^1.1.2
   intl: ^0.20.1
   intro_screen_onboarding_flutter: ^1.0.0
   meta: ^1.15.0
+  path_provider: ^2.1.5
   screenutil_module: ^1.1.0
   shared_preferences: ^2.3.4
   shimmer: ^3.0.0

@@ -31,7 +31,6 @@ class NotesCubit extends Cubit<NotesState> {
     }
   }
 
-  // Delete a note and update Hive
   Future<void> deleteNote(int index) async {
     try {
       await notesBox.deleteAt(index);

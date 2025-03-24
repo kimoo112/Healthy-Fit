@@ -73,7 +73,9 @@ class _GeneralSettingsViewState extends State<GeneralSettingsView> {
           _buildSettingsItem(
             icon: IconlyBold.user_2,
             title: "Profile",
-            onTap: () {},
+            onTap: () {
+              customNavigate(context, userProfile);
+            },
           ),
           20.verticalSpace,
           _buildSwitchItem(
@@ -84,9 +86,12 @@ class _GeneralSettingsViewState extends State<GeneralSettingsView> {
           ),
           20.verticalSpace,
           _buildSettingsItem(
-            icon: IconlyBold.lock,
-            title: "Privacy & Security",
-            onTap: () {},
+            icon: IconlyBold.wallet,
+            title: "Subscriptions",
+            onTap: () {
+              customNavigate(context,subscriptionView);
+
+            },
           ),
           20.verticalSpace,
           _buildLanguageDropdown(),
@@ -94,7 +99,10 @@ class _GeneralSettingsViewState extends State<GeneralSettingsView> {
           _buildSettingsItem(
             icon: IconlyBold.info_circle,
             title: "Help & Support",
-            onTap: () {},
+            onTap: () {
+              customNavigate(context,helpView);
+
+            },
           ),
           20.verticalSpace,
           _buildSettingsItem(
@@ -102,6 +110,7 @@ class _GeneralSettingsViewState extends State<GeneralSettingsView> {
             title: "Logout",
             onTap: () async {
               await CacheHelper.removeSecuredString(key: ApiKeys.token);
+              await CacheHelper.clearData();
               if (context.mounted) {
                 customNavigate(context, login);
               }

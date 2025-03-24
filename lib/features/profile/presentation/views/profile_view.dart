@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:healthy_fit/core/api/end_points.dart';
@@ -11,21 +13,47 @@ import 'package:iconly/iconly.dart';
 import '../../../../core/routes/functions/navigation_functions.dart';
 import '../../../../core/widgets/top_right_vectors.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
+
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileData();
+  }
+
+  void _loadProfileData() {
+    setState(() {}); 
+    CacheHelper.getData(key: 'profile_image');
+    CacheHelper.getData(key: ApiKeys.name);
+    CacheHelper.getData(key: ApiKeys.newWeight);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadProfileData(); // Reload data when dependencies change
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          extendBodyBehindAppBar: true,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             centerTitle: true,
-            title: const Text('Account'),
             actions: [
               IconButton(
                 onPressed: () async {
                   await CacheHelper.removeSecuredString(key: ApiKeys.token);
+                  await CacheHelper.clearData();
+
                   if (context.mounted) {
                     customNavigate(context, login);
                   }
@@ -42,7 +70,18 @@ class ProfileView extends StatelessWidget {
                 children: <Widget>[
                   70.verticalSpace,
                   CircleAvatar(
-                    minRadius: 55.r,
+                    radius: 55,
+                    backgroundColor: AppColors.primaryColor,
+                    backgroundImage: CacheHelper.getData(
+                                key: 'profile_image') !=
+                            null
+                        ? FileImage(File(CacheHelper.getData(
+                            key: 'profile_image')!)) // Convert String to File
+                        : null,
+                    child: CacheHelper.getData(key: 'profile_image') == null
+                        ? Icon(IconlyBold.profile,
+                            size: 50, color: AppColors.white)
+                        : null,
                   ),
                   5.verticalSpace,
                   Text(CacheHelper.getData(key: ApiKeys.name)),
@@ -67,7 +106,9 @@ class ProfileView extends StatelessWidget {
                         style: CustomTextStyles.poppins400Style12Grey,
                       ),
                       Text(
-                        "${CacheHelper.getData(key: ApiKeys.weight)}",
+                        CacheHelper.getData(key: ApiKeys.newWeight)
+                                ?.toString() ??
+                            CacheHelper.getData(key: ApiKeys.weight).toString(),
                         style: CustomTextStyles.poppins400Style14,
                       ),
                       Text(
@@ -76,8 +117,6 @@ class ProfileView extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // Reminder Section
-
                   24.verticalSpace,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -89,14 +128,27 @@ class ProfileView extends StatelessWidget {
                         child: _buildIconButton(
                             Assets.imagesSubscription, 'Subscription'),
                       ),
-                      _buildIconButton(Assets.imagesProfile, 'Profile'),
+                      GestureDetector(
+                          onTap: () {
+                            customNavigate(
+                              context,
+                              userProfile,
+                              onReturn: () => setState(() {}),
+                            );
+                          },
+                          child: _buildIconButton(
+                              Assets.imagesProfile, 'Profile')),
                     ],
                   ),
                   24.verticalSpace,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildIconButton(Assets.imagesHelp, 'Help'),
+                      GestureDetector(
+                          onTap: () {
+                            customNavigate(context, helpView);
+                          },
+                          child: _buildIconButton(Assets.imagesHelp, 'Help')),
                       GestureDetector(
                           onTap: () {
                             customNavigate(context, generalSettingsView);

@@ -31,11 +31,12 @@ class _HomeViewState extends State<HomeView> {
         .checkForMidnightReset(CacheHelper.getData(key: ApiKeys.id));
     context.read<HomeCubit>().fetchFood(context);
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    resizeToAvoidBottomInset: true, // Make space for the keyboard
+    body: SafeArea(
+      child: Padding(
         padding: EdgeInsets.all(12.0.sp),
         child: BlocBuilder<HomeCubit, HomeState>(
           builder: (context, state) {
@@ -43,43 +44,57 @@ class _HomeViewState extends State<HomeView> {
                 CacheHelper.getData(key: ApiKeys.caloriesGoal) as int?;
             int? calorieGoal = cachedCalories ??
                 (state is GetCaloriesGoalSuccess ? state.calorieGoal : null);
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const UserInfo(),
-                40.verticalSpace,
-                _buildHomeTitle(),
-                22.verticalSpace,
-                CaloriesContainer(
-                    calorieGoal: calorieGoal,
-                    userId: CacheHelper.getData(key: ApiKeys.id)),
-                8.verticalSpace,
-                const CarbsAndFatsContainer(),
-                8.verticalSpace,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Today’s Meal'),
-                    TextButton(
-                      onPressed: () {
-                        customNavigate(context, addMealsView);
-                      },
-                      child: Text(
-                        "Add Meal",
-                        style: TextStyle(color: AppColors.primaryColor),
+
+            return CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const UserInfo(),
+                      40.verticalSpace,
+                      _buildHomeTitle(),
+                      22.verticalSpace,
+                      CaloriesContainer(
+                        calorieGoal: calorieGoal,
+                        userId: CacheHelper.getData(key: ApiKeys.id),
                       ),
-                    ),
-                  ],
+                      8.verticalSpace,
+                      const CarbsAndFatsContainer(),
+                      8.verticalSpace,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Today’s Meal'),
+                          TextButton(
+                            onPressed: () {
+                              customNavigate(context, addMealsView);
+                            },
+                            child: Text(
+                              "Add Meal",
+                              style: TextStyle(color: AppColors.primaryColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                      16.verticalSpace,
+                    ],
+                  ),
                 ),
-                16.verticalSpace,
-                const Expanded(child: FoodListViewWidget()),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 600.h, 
+                    child: const FoodListViewWidget(),
+                  ),
+                ),
               ],
             );
           },
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Column _buildHomeTitle() {
     return Column(
