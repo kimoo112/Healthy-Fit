@@ -3,6 +3,7 @@ import 'package:floating_navbar/floating_navbar_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:healthy_fit/core/utils/app_colors.dart';
+import 'package:healthy_fit/features/home/presentation/views/favorite_view.dart';
 import 'package:healthy_fit/features/home/presentation/views/home_view.dart';
 import 'package:healthy_fit/features/profile/presentation/views/profile_view.dart';
 import 'package:iconly/iconly.dart';
@@ -35,6 +36,10 @@ class _AppNavigationState extends State<AppNavigation> {
             title: 'Home',
             page: const HomeView(),
           ),
+          FloatingNavBarItem(
+              iconData: IconlyBold.heart,
+              title: 'Favorites',
+              page: const FavoriteScreen()),
           FloatingNavBarItem(
               iconData: IconlyBold.paper_plus,
               title: 'Notes',

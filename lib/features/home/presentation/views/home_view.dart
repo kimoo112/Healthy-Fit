@@ -96,6 +96,7 @@ Widget build(BuildContext context) {
   );
 }
 
+
   Column _buildHomeTitle() {
     return Column(
       children: [

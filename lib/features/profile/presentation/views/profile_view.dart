@@ -8,6 +8,7 @@ import 'package:healthy_fit/core/routes/routes.dart';
 import 'package:healthy_fit/core/utils/app_assets.dart';
 import 'package:healthy_fit/core/utils/app_colors.dart';
 import 'package:healthy_fit/core/utils/app_text_styles.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:iconly/iconly.dart';
 
 import '../../../../core/routes/functions/navigation_functions.dart';
@@ -53,7 +54,7 @@ class _ProfileViewState extends State<ProfileView> {
                 onPressed: () async {
                   await CacheHelper.removeSecuredString(key: ApiKeys.token);
                   await CacheHelper.clearData();
-
+  Hive.box('favorites').clear();
                   if (context.mounted) {
                     customNavigate(context, login);
                   }

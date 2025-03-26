@@ -144,7 +144,7 @@ class _UserProfileViewState extends State<UserProfileView> {
             ),
           ),
 
-          // Content
+// Content
           SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

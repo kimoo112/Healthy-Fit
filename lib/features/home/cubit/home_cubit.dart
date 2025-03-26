@@ -65,6 +65,7 @@ class HomeCubit extends Cubit<HomeState> {
     } on ServerException catch (e) {
       if (e.errModel.errorMessage == "Not authorized, token failed") {
         await CacheHelper.removeSecuredString(key: ApiKeys.token);
+        await CacheHelper.clearData();
         customReplacementAndRemove(context, login);
       }
 
@@ -131,7 +132,7 @@ class HomeCubit extends Cubit<HomeState> {
     if (userId == null) return;
 
     var box = Hive.box('nutritionBox');
-      await checkForMidnightReset(userId); 
+    await checkForMidnightReset(userId);
 
     final calorieKey = 'myCalories_$userId';
     final proteinKey = 'myProtein_$userId';
@@ -150,7 +151,6 @@ class HomeCubit extends Cubit<HomeState> {
     int myCarbs = box.get(carbsKey, defaultValue: 0);
     myCarbs += carbs;
     box.put(carbsKey, myCarbs);
-
 
     await _updateWeeklyNutrition(
       userId,
@@ -203,7 +203,7 @@ class HomeCubit extends Cubit<HomeState> {
         return;
       }
 
-      await checkForMidnightReset(userId); 
+      await checkForMidnightReset(userId);
       List<int> weeklyCalories =
           box.get('weeklyCalories_$userId', defaultValue: List.filled(7, 0));
       List<int> weeklyProtein =

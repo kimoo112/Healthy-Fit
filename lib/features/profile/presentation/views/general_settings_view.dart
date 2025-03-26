@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:healthy_fit/core/utils/app_colors.dart';
 import 'package:healthy_fit/core/utils/app_text_styles.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:iconly/iconly.dart';
 
 import '../../../../core/api/end_points.dart';
@@ -111,6 +112,7 @@ class _GeneralSettingsViewState extends State<GeneralSettingsView> {
             onTap: () async {
               await CacheHelper.removeSecuredString(key: ApiKeys.token);
               await CacheHelper.clearData();
+                Hive.box('favorites').clear();
               if (context.mounted) {
                 customNavigate(context, login);
               }

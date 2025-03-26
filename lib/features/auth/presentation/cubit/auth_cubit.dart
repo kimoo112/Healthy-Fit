@@ -60,6 +60,7 @@ class AuthCubit extends Cubit<AuthState> {
       final token = userProfile.token;
       await CacheHelper.saveSecuredString(key: ApiKeys.token, value: token!);
       await CacheHelper.saveData(key: ApiKeys.id, value: userProfile.user!.id);
+      await CacheHelper.saveData(key: ApiKeys.email, value: userProfile.user!.email);
       await CacheHelper.saveData(
           key: ApiKeys.name, value: userProfile.user!.name);
       await CacheHelper.saveData(

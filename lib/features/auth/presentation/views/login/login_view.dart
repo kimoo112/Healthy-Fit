@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../core/widgets/green_slogan.dart';
 import '../../../../../core/widgets/top_right_vectors.dart';
 import '../../widgets/custom_login_form.dart';
+import '../../widgets/login_title_widget.dart';
 import '../../widgets/navigate_to_signup.dart';
 
 class LoginView extends StatelessWidget {
@@ -18,6 +19,7 @@ class LoginView extends StatelessWidget {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            LoginTitleWidget(),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: CustomLoginForm(),

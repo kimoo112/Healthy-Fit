@@ -7,7 +7,6 @@ import 'package:iconly/iconly.dart';
 import 'package:screenutil_module/main.dart';
 
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_form_field.dart';
 
@@ -36,18 +35,9 @@ class CustomLoginForm extends StatelessWidget {
         return Form(
           key: formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                'Welcome Back 👋',
-                style: CustomTextStyles.poppinsStyle20Bold,
-              ),
-              10.verticalSpace,
-              Text(
-                'Hi there, you’ve been missed',
-                style: CustomTextStyles.poppins400Style12Grey,
-              ),
-              40.verticalSpace,
               CustomTextFormField(
                 isHavePrefix: false,
                 controller: context.read<AuthCubit>().loginEmail,
@@ -78,11 +68,26 @@ class CustomLoginForm extends StatelessWidget {
                   color: AppColors.primaryColor,
                 ),
               ),
-              50.verticalSpace,
+              10.verticalSpace,
+              TextButton(
+                onPressed: () {
+                  customNavigate(context, forgetPasswordView);
+                },
+                child: Text(
+                  "Forget Password !",
+                  style: TextStyle(color: AppColors.primaryColor),
+                ),
+              ),
+              30.verticalSpace,
               state is LoginLoading
-                  ? CircularProgressIndicator(
-                      color: AppColors.primaryColor,
-                    )
+                  ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                          color: AppColors.primaryColor,
+                        ),
+                    ],
+                  )
                   : CustomButton(
                       marginSize: 0,
                       onPressed: () async {

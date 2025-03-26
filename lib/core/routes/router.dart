@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:healthy_fit/core/routes/routes.dart';
 import 'package:healthy_fit/core/ui/app_navigation.dart';
+import 'package:healthy_fit/features/auth/presentation/views/login/forget_password_view.dart';
 import 'package:healthy_fit/features/auth/presentation/views/login/login_view.dart';
 import 'package:healthy_fit/features/auth/presentation/views/register/age_view.dart';
 import 'package:healthy_fit/features/auth/presentation/views/register/signup_view.dart';
@@ -12,15 +12,16 @@ import 'package:healthy_fit/features/home/presentation/views/add_meal_view.dart'
 import 'package:healthy_fit/features/onboarding/presentation/views/onboarding_view.dart';
 import 'package:healthy_fit/features/profile/presentation/views/card_view.dart';
 import 'package:healthy_fit/features/profile/presentation/views/general_settings_view.dart';
+import 'package:healthy_fit/features/profile/presentation/views/help_view.dart';
 import 'package:healthy_fit/features/profile/presentation/views/profile_view.dart';
 import 'package:healthy_fit/features/profile/presentation/views/subscription_view.dart';
+import 'package:healthy_fit/features/profile/presentation/views/user_profile_view.dart';
 import 'package:healthy_fit/features/splash/presentation/views/splash_view.dart';
 
 import '../../features/auth/presentation/views/register/gender_view.dart';
 import '../../features/auth/presentation/views/register/goal_selection_view.dart';
 import '../../features/home/data/food_model/food_model/food_model.dart';
 import '../../features/home/presentation/views/food_details_view.dart';
-import '../../features/notes/presentation/cubit/notes_cubit.dart';
 
 final GoRouter router = GoRouter(
   routes: [
@@ -40,6 +41,12 @@ final GoRouter router = GoRouter(
       path: login,
       builder: (BuildContext context, GoRouterState state) {
         return const LoginView();
+      },
+    ),
+        GoRoute(
+      path: forgetPasswordView,
+      builder: (BuildContext context, GoRouterState state) {
+        return const ForgetPasswordView();
       },
     ),
     GoRoute(
@@ -81,10 +88,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: appNavigation,
       builder: (BuildContext context, GoRouterState state) {
-        return BlocProvider(
-          create: (context) => NotesCubit()..fetchNotes(),
-          child: const AppNavigation(),
-        );
+        return const AppNavigation();
       },
     ),
     GoRoute(
@@ -127,6 +131,18 @@ final GoRouter router = GoRouter(
       path: generalSettingsView,
       builder: (BuildContext context, GoRouterState state) {
         return const GeneralSettingsView();
+      },
+    ),
+    GoRoute(
+      path: userProfile,
+      builder: (BuildContext context, GoRouterState state) {
+        return const UserProfileView();
+      },
+    ),
+    GoRoute(
+      path: helpView,
+      builder: (BuildContext context, GoRouterState state) {
+        return const HelpView();
       },
     ),
   ],

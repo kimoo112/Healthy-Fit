@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:healthy_fit/core/utils/app_assets.dart';
 import 'package:healthy_fit/core/utils/app_colors.dart';
 import 'package:healthy_fit/core/utils/app_text_styles.dart';
 import 'package:hive_flutter/hive_flutter.dart'; // ✅ Import Hive
@@ -9,22 +10,22 @@ class CaloriesContainer extends StatelessWidget {
   const CaloriesContainer({
     super.key,
     required this.calorieGoal,
-    required this.userId, // ✅ Add userId parameter
+    required this.userId,
   });
 
   final int? calorieGoal;
-  final String userId; // ✅ Store userId
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
-    final box = Hive.box('nutritionBox'); // ✅ Access Hive Box
+    final box = Hive.box('nutritionBox');
 
     return ValueListenableBuilder(
-      valueListenable: box.listenable(), // ✅ Listen for changes
+      valueListenable: box.listenable(),
       builder: (context, Box<dynamic> box, _) {
         // ✅ Use user-specific key
         final currentCalories = box.get('myCalories_$userId', defaultValue: 0);
-        debugPrint("Current Calories: $currentCalories"); // ✅ Debug print
+        debugPrint("Current Calories: $currentCalories");
 
         double progressPercentage =
             (currentCalories / (calorieGoal ?? 2000)) * 100;
@@ -43,6 +44,16 @@ class CaloriesContainer extends StatelessWidget {
           height: 255.h,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
+            image: DecorationImage(
+                image: const AssetImage(
+                  Assets.imagesFit,
+                ),
+                colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(
+                      0.5), // Darken the image (adjust opacity as needed)
+                  BlendMode.darken,
+                ),
+                fit: BoxFit.cover),
             color: AppColors.limeGreen.withOpacity(.3),
           ),
           child: Padding(
@@ -50,8 +61,15 @@ class CaloriesContainer extends StatelessWidget {
             child: SleekCircularSlider(
               appearance: CircularSliderAppearance(
                 infoProperties: InfoProperties(
-                  topLabelStyle: CustomTextStyles.poppins400Style14,
-                  bottomLabelStyle: CustomTextStyles.poppins400Style12Grey,
+                  topLabelStyle: CustomTextStyles.poppins400Style14.copyWith(
+                    color: AppColors.white
+                  ),
+                  bottomLabelStyle: CustomTextStyles.poppins400Style12Grey.copyWith(
+                    color: AppColors.white
+                  ),
+                  mainLabelStyle:CustomTextStyles.poppins400Style24.copyWith(
+                    color: AppColors.white
+                  ),
                   topLabelText: 'Calories',
                   modifier: (percentage) {
                     return " $currentCalories Kcal"; // ✅ Updated dynamically

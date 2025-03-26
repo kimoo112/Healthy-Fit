@@ -1,9 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-void customNavigate(context, String path, {Object? extra}) {
-  GoRouter.of(context).push(path, extra: extra);
+void customNavigate( context, String path, {Object? extra, VoidCallback? onReturn}) {
+  GoRouter.of(context).push(path, extra: extra).then((_) {
+    if (onReturn != null) {
+      onReturn();
+    }
+  });
 }
-
 void customReplacementNavigate(context, String path) {
   GoRouter.of(context).pushReplacement(path);
 }

@@ -19,6 +19,7 @@ void main() async {
   await CacheHelper.init();
   await Hive.initFlutter();
   await Hive.openBox('nutritionBox');
+  await Hive.openBox('favorites');
   Bloc.observer = MyBlocObserver();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,

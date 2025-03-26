@@ -20,6 +20,7 @@ class ApiKeys {
   static String age = "age";
   static String height = "height";
   static String weight = "weight";
+  static String newWeight = "newWeight";
   static String goals = "goals";
   static String caloriesGoal = "caloriesGoal";
   static String calorieGoal = "calorieGoal";
